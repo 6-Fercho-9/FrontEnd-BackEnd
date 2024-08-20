@@ -10,26 +10,42 @@ export const AddClienteComponent = () => {
   const navigate = useNavigate();
   const{id}=useParams();//sirve para usar esa constante como parametro
 
-  const saveCliente = (e) => {
+  const saveOrUpdateCliente = (e) => {
     e.preventDefault();
     const cliente = { nombre, apellido, email };
-    ClienteService.createCliente(cliente).then((response)=>{
-      console.log(response.data)
-      navigate('/clientes')
-    }).catch(error=>{
-      console.error(error)
-    })  
+    if(id){
+      ClienteService.updateCliente(id,cliente)
+        .then((response) => {
+          console.log(response.data);
+          navigate("/clientes");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }else{
+      ClienteService.createCliente(cliente)
+        .then((response) => {
+          console.log(response.data);
+          navigate("/clientes");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   };
 
   useEffect(()=>{
     ClienteService.getClienteById(id).then(response=>{
+      
       setNombre(response.data.nombre)
       setApellido(response.data.apellido)
       setEmail(response.data.email)
+      
     }).catch(error=>{
+      console.log("disparo nombre apellido y email");
       console.error(error)
     })
-  })
+  },[])
 
   const title=()=>{
     if(id) return <span>Actualizar Contacto</span>
@@ -68,7 +84,7 @@ export const AddClienteComponent = () => {
                   valor={email}
                   setValor={setEmail}
                 ></ComponenteReutilizable>
-                <button className="btn btn-success" onClick={(e) => saveCliente(e)}>Guardar</button>
+                <button className="btn btn-success" onClick={(e) => saveOrUpdateCliente(e)}>Guardar</button>
                 &nbsp;&nbsp;
                 <Link to='/clientes' className='btn btn-danger'>Cancelar</Link>
               </div>

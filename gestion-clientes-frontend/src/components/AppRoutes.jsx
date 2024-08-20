@@ -8,7 +8,8 @@ export const AppRoutes = () => {
         <Routes>
             <Route exact path='/' element={<ListaComponente></ListaComponente>}></Route>
             <Route path='/clientes' element={<ListaComponente></ListaComponente>}></Route>
-            <Route path='/add-Cliente' element={<AddClienteComponent></AddClienteComponent>}></Route>
+            <Route path='/add-cliente' element={<AddClienteComponent></AddClienteComponent>}></Route>
+            <Route path='/edit-cliente/:id' element={<AddClienteComponent></AddClienteComponent>}></Route>
         </Routes>
     </>
   )

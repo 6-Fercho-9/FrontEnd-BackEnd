@@ -8,17 +8,33 @@ import { Link } from "react-router-dom";
 export const ListaComponente = () => {
   const [contacto,SetContacto]=useState([])
   useEffect(()=>{
-    ClienteService.getAllClientes().then(response=>{
-        SetContacto(response.data);
-        console.log(response.data)
-    }).catch(error=>{
-        console.error(error)
-    })
+    console.log("me dispare");
+    listarClientes()
   },[])
+
+  const listarClientes=()=>{
+    ClienteService.getAllClientes()
+      .then((response) => {
+        SetContacto(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log("me dispare en error al listar")
+        console.error(error);
+      });
+  }
+    const deleteCliente=(idCliente)=>{
+      ClienteService.deleteCliente(idCliente).then(response=>{
+        listarClientes();
+
+      }).catch(error=>{
+        console.error(error)
+      })
+    }
   return (
     <>
       <h2 className="text-center" >Lista Empleados</h2>
-      <Link to='/add-cliente' className='btn btn-primary mb-2'>Agregar Cliente</Link>
+      
       <table className="table table-striped table-dark">
         <thead>
           <tr>
@@ -26,7 +42,7 @@ export const ListaComponente = () => {
             <th >Nombre</th>
             <th >Apellido</th>
             <th >Email</th>
-            <th>Accion</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -40,13 +56,17 @@ export const ListaComponente = () => {
                           <td>{elementoContacto.email}</td>
                           <td>
                             <Link className="btn btn-info" to={`/edit-cliente/${elementoContacto.id}`}>Actualizar</Link>
+                            &nbsp;&nbsp;
+                            <button className="btn btn-danger" onClick={()=>{deleteCliente(elementoContacto.id)}} >Eliminar</button>
                           </td>
+                          
                         </tr>
                     )
                 )
             }        
         </tbody>
       </table>
+      <Link to='/add-cliente' className='btn btn-primary mb-2'>Agregar Cliente</Link>
     </>
   );
 };
